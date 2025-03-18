@@ -6,7 +6,7 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 20:36:11 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 00:55:19 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 02:25:39 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define FRACTOL_H
 
 # include "../../libft/libft.h"
-# include "../../minilibx-linux/mlx.h"
+# include "../../mlx/mlx.h"
 # include "defines.h"
 # include <errno.h>
 # include <fcntl.h>

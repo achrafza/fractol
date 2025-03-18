@@ -6,7 +6,7 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 20:35:45 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 00:56:34 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 01:34:47 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,23 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	closeit(t_screen *scr)
+int	closeit(t_screen *f)
 {
-	mlx_destroy_image(scr->vars.mlx, scr->img.img);
-	mlx_clear_window(scr->vars.mlx, scr->vars.win);
-	mlx_destroy_window(scr->vars.mlx, scr->vars.win);
-	exit(0);
+	if (f->img.img)
+	{
+		mlx_destroy_image(f->vars.mlx, f->img.img);
+	}
+	if (f->vars.win)
+	{
+		mlx_clear_window(f->vars.mlx, f->vars.win);
+		mlx_destroy_window(f->vars.mlx, f->vars.win);
+	}
+	if (f->vars.mlx)
+	{
+		mlx_destroy_display(f->vars.mlx);
+		free(f->vars.mlx);
+	}
+	exit(1);
 	return (0);
 }
 
@@ -103,7 +114,6 @@ int	drawchanges(t_screen *scr, int ac, char **av)
 		drawmandelbrotset(*scr);
 		return (2);
 	}
-
 	return (-1);
 }
 
@@ -145,20 +155,20 @@ int	main(int ac, char *av[])
 
 	handleexeptions(ac, av);
 	screen.vars.mlx = mlx_init();
-  if (!screen.vars.mlx)
-    exit(1);
+	if (!screen.vars.mlx)
+		exit(1);
 	screen.av = av;
 	screen.vars.win = mlx_new_window(screen.vars.mlx, WIDTH, HEIGHT, "fractol");
-  if (!screen.vars.win)
-    exit(1);
+	if (!screen.vars.win)
+		exit(1);
 	screen.img.img = mlx_new_image(screen.vars.mlx, WIDTH, HEIGHT);
-  if (!screen.img.img)
-    exit(1);
+	if (!screen.img.img)
+		exit(1);
 	screen.img.addr = mlx_get_data_addr(screen.img.img,
 			&(screen.img.bits_per_pixel), &(screen.img.line_length),
 			&(screen.img.endian));
-  if (!screen.img.addr)
-    exit(1);
+	if (!screen.img.addr)
+		exit(1);
 	drawchanges(&screen, ac, av);
 	mlx_put_image_to_window(screen.vars.mlx, screen.vars.win, screen.img.img, 0,
 		0);
