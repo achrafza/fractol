@@ -6,41 +6,11 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 20:35:45 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 02:34:55 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 03:59:36 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
-#include <string.h>
-#include <unistd.h>
-
-void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-int	closeit(t_screen *f)
-{
-	if (f->img.img)
-	{
-		mlx_destroy_image(f->vars.mlx, f->img.img);
-	}
-	if (f->vars.win)
-	{
-		mlx_clear_window(f->vars.mlx, f->vars.win);
-		mlx_destroy_window(f->vars.mlx, f->vars.win);
-	}
-	if (f->vars.mlx)
-	{
-		mlx_destroy_display(f->vars.mlx);
-		free(f->vars.mlx);
-	}
-	exit(1);
-	return (0);
-}
 
 void	setinit(t_screen *scr, char **av, int flag)
 {
@@ -50,72 +20,24 @@ void	setinit(t_screen *scr, char **av, int flag)
 	scr->value.xmin = -2.0;
 	scr->value.ymin = -2.0;
 	scr->flag = flag;
-  scr->shapeshifter = COLORINIT;
-}
-
-static int	point(char *s)
-{
-	int	i;
-	int	c;
-
-	i = 0;
-	c = 0;
-	while (s[i])
-	{
-		if (s[i] == '.')
-			c++;
-		i++;
-	}
-	return (c);
-}
-
-static int	checker(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] && s[i] == ' ')
-		i++;
-	if (!s[i])
-		return (1);
-	if (s[i] == '-' || s[i] == '+')
-		i++;
-	if (s[i] < '0' || s[i] > '9')
-		return (1);
-	while (s[i] >= '0' && s[i] <= '9')
-		i++;
-	if (s[i] == '.' && (s[i + 1] >= '0' && s[i + 1] <= '9'))
-		i++;
-	while (s[i] >= '0' && s[i] <= '9')
-		i++;
-	while (s[i] && s[i] == ' ')
-		i++;
-	if (s[i])
-		return (1);
-	return (0);
-}
-
-int	checkerav(char **av)
-{
-	return ((checker(av[2]) || checker(av[3])) || ((point(av[2]) > 1)
-			|| (point(av[3]) > 1)));
+	scr->shapeshifter = COLORINIT;
 }
 
 int	drawchanges(t_screen *scr, int ac, char **av)
 {
-	if (strcmp(scr->av[1], "julia") == 0 && ac == 4)
+	if (ft_strncmp(scr->av[1], "julia", 6) == 0 && ac == 4)
 	{
 		setinit(scr, av, 1);
 		drawjulia(*scr);
 		return (1);
 	}
-	else if (strcmp(scr->av[1], "mandelbrot_set") == 0 && ac == 2)
+	else if (ft_strncmp(scr->av[1], "mandelbrot_set", 15) == 0 && ac == 2)
 	{
 		setinit(scr, av, 2);
 		drawmandelbrotset(*scr);
 		return (2);
 	}
-	else if (strcmp(scr->av[1], "burning_ship") == 0 && ac == 2)
+	else if (ft_strncmp(scr->av[1], "burning_ship", 13) == 0 && ac == 2)
 	{
 		setinit(scr, av, 3);
 		drawburningship(*scr);
@@ -124,40 +46,24 @@ int	drawchanges(t_screen *scr, int ac, char **av)
 	return (-1);
 }
 
-void	handleexeptions(int ac, char *av[])
+static void	writers_soul(int n)
 {
-	if (ac < 2)
+	if (n == 1)
 	{
 		write(2, "usage : ./fractol julia [+/-xx.xx] [+/-xx.xx]\n", 46);
+		exit(1);
+	}
+	else if (n == 2)
+	{
 		write(2, "usage : ./fractol mandelbrot_set\n", 34);
+		exit(1);
+	}
+	else if (n == 3)
+	{
 		write(2, "usage : ./fractol burning_ship\n", 32);
 		exit(1);
 	}
-	if (!strcmp(av[1], "julia"))
-	{
-		if (ac != 4 || checkerav(av))
-		{
-			write(2, "usage : ./fractol julia [+/-xx.xx] [+/-xx.xx]\n", 46);
-			exit(1);
-		}
-	}
-	else if (!strcmp(av[1], "mandelbrot_set"))
-	{
-		if (ac != 2)
-		{
-			write(2, "usage : ./fractol mandelbrot_set\n", 34);
-			exit(1);
-		}
-	}
-	else if (!strcmp(av[1], "burning_ship"))
-	{
-		if (ac != 2)
-		{
-			write(2, "usage : ./fractol burning_ship\n", 32);
-			exit(1);
-		}
-	}
-	else if (strcmp("julia", av[1]) && strcmp(av[1], "mandelbrot_set"))
+	else if (n == 4)
 	{
 		write(2, "usage : ./fractol julia [+/-xx.xx] [+/-xx.xx]\n", 46);
 		write(2, "usage : ./fractol mandelbrot_set\n", 34);
@@ -166,26 +72,52 @@ void	handleexeptions(int ac, char *av[])
 	}
 }
 
+void	handleexeptions(int ac, char *av[])
+{
+	if (ac < 2)
+	{
+		writers_soul(4);
+	}
+	if (!ft_strncmp(av[1], "julia", 6))
+	{
+		if (ac != 4 || checkerav(av))
+			writers_soul(1);
+	}
+	else if (!ft_strncmp(av[1], "mandelbrot_set", 15))
+	{
+		if (ac != 2)
+			writers_soul(2);
+	}
+	else if (!ft_strncmp(av[1], "burning_ship", 13))
+	{
+		if (ac != 2)
+			writers_soul(3);
+	}
+	else if (ft_strncmp("julia", av[1], 6) && ft_strncmp(av[1],
+			"mandelbrot_set", 15) && ft_strncmp(av[1], "burning_ship", 13))
+		writers_soul(4);
+}
+
 int	main(int ac, char *av[])
 {
 	t_screen	screen;
 
 	handleexeptions(ac, av);
 	screen.vars.mlx = mlx_init();
-  if (!screen.vars.mlx)
-    exit(1);
+	if (!screen.vars.mlx)
+		exit(1);
 	screen.av = av;
 	screen.vars.win = mlx_new_window(screen.vars.mlx, WIDTH, HEIGHT, "fractol");
-  if (!screen.vars.win)
-    exit(1);
+	if (!screen.vars.win)
+		exit(1);
 	screen.img.img = mlx_new_image(screen.vars.mlx, WIDTH, HEIGHT);
-  if (!screen.img.img)
-    exit(1);
+	if (!screen.img.img)
+		exit(1);
 	screen.img.addr = mlx_get_data_addr(screen.img.img,
 			&(screen.img.bits_per_pixel), &(screen.img.line_length),
 			&(screen.img.endian));
-  if (!screen.img.addr)
-    exit(1);
+	if (!screen.img.addr)
+		exit(1);
 	drawchanges(&screen, ac, av);
 	mlx_put_image_to_window(screen.vars.mlx, screen.vars.win, screen.img.img, 0,
 		0);

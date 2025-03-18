@@ -6,41 +6,12 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 20:35:45 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 01:34:47 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 03:32:27 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
-#include <string.h>
 #include <unistd.h>
-
-void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-int	closeit(t_screen *f)
-{
-	if (f->img.img)
-	{
-		mlx_destroy_image(f->vars.mlx, f->img.img);
-	}
-	if (f->vars.win)
-	{
-		mlx_clear_window(f->vars.mlx, f->vars.win);
-		mlx_destroy_window(f->vars.mlx, f->vars.win);
-	}
-	if (f->vars.mlx)
-	{
-		mlx_destroy_display(f->vars.mlx);
-		free(f->vars.mlx);
-	}
-	exit(1);
-	return (0);
-}
 
 void	setinit(t_screen *scr, char **av, int flag)
 {
@@ -52,63 +23,15 @@ void	setinit(t_screen *scr, char **av, int flag)
 	scr->flag = flag;
 }
 
-static int	point(char *s)
-{
-	int	i;
-	int	c;
-
-	i = 0;
-	c = 0;
-	while (s[i])
-	{
-		if (s[i] == '.')
-			c++;
-		i++;
-	}
-	return (c);
-}
-
-static int	checker(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] && s[i] == ' ')
-		i++;
-	if (!s[i])
-		return (1);
-	if (s[i] == '-' || s[i] == '+')
-		i++;
-	if (s[i] < '0' || s[i] > '9')
-		return (1);
-	while (s[i] >= '0' && s[i] <= '9')
-		i++;
-	if (s[i] == '.' && (s[i + 1] >= '0' && s[i + 1] <= '9'))
-		i++;
-	while (s[i] >= '0' && s[i] <= '9')
-		i++;
-	while (s[i] && s[i] == ' ')
-		i++;
-	if (s[i])
-		return (1);
-	return (0);
-}
-
-int	checkerav(char **av)
-{
-	return ((checker(av[2]) || checker(av[3])) || ((point(av[2]) > 1)
-			|| (point(av[3]) > 1)));
-}
-
 int	drawchanges(t_screen *scr, int ac, char **av)
 {
-	if (strcmp(scr->av[1], "julia") == 0 && ac == 4)
+	if (ft_strncmp(scr->av[1], "julia", 6) == 0 && ac == 4)
 	{
 		setinit(scr, av, 1);
 		drawjulia(*scr);
 		return (1);
 	}
-	else if (strcmp(scr->av[1], "mandelbrot_set") == 0 && ac == 2)
+	else if (ft_strncmp(scr->av[1], "mandelbrot_set", 15) == 0 && ac == 2)
 	{
 		setinit(scr, av, 2);
 		drawmandelbrotset(*scr);
@@ -119,13 +42,14 @@ int	drawchanges(t_screen *scr, int ac, char **av)
 
 void	handleexeptions(int ac, char *av[])
 {
-	if (ac < 2)
+	if (ac < 2 || (ft_strncmp("julia", av[1], 6) && ft_strncmp(av[1],
+				"mandelbrot_set", 15)))
 	{
 		write(2, "usage : ./fractol julia [+/-xx.xx] [+/-xx.xx]\n", 46);
 		write(2, "usage : ./fractol mandelbrot_set\n", 34);
 		exit(1);
 	}
-	if (!strcmp(av[1], "julia"))
+	if (!ft_strncmp(av[1], "julia", 6))
 	{
 		if (ac != 4 || checkerav(av))
 		{
@@ -133,19 +57,13 @@ void	handleexeptions(int ac, char *av[])
 			exit(1);
 		}
 	}
-	else if (!strcmp(av[1], "mandelbrot_set"))
+	else if (!ft_strncmp(av[1], "mandelbrot_set", 15))
 	{
 		if (ac != 2)
 		{
 			write(2, "usage : ./fractol mandelbrot_set\n", 34);
 			exit(1);
 		}
-	}
-	else if (strcmp("julia", av[1]) && strcmp(av[1], "mandelbrot_set"))
-	{
-		write(2, "usage : ./fractol julia [+/-xx.xx] [+/-xx.xx]\n", 46);
-		write(2, "usage : ./fractol mandelbrot_set\n", 34);
-		exit(1);
 	}
 }
 

@@ -5,12 +5,17 @@ INC = -I$(HOME)/.local/lib
 MSRC := mandatory/srcs/main.c\
 			 mandatory/srcs/julia.c\
 			 mandatory/srcs/mandelbrot.c\
-			 mandatory/srcs/utils.c
+			 mandatory/srcs/utils.c\
+			 mandatory/srcs/hooks.c\
+			 mandatory/srcs/checks_mlxers.c
 BSRC := bonus/srcs/main.c\
 			 bonus/srcs/julia.c\
 			 bonus/srcs/mandelbrot.c\
 			 bonus/srcs/burningship.c\
-			 bonus/srcs/utils.c
+			 bonus/srcs/utils.c\
+			 bonus/srcs/check_mlxers.c\
+			 bonus/srcs/hooks.c
+
 NAME = fractol
 BONUS = fractol_bonus
 HEADER = mandatory/includes/fractol.h

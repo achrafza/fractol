@@ -6,13 +6,13 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 22:41:45 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/17 21:28:02 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 05:28:29 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-static ll	chosecolor(double x, double y, double shape)
+static int	chosecolor(double x, double y, double shape)
 {
 	int		i;
 	double	abs;

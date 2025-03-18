@@ -6,14 +6,13 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:14:11 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/17 21:28:53 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 05:28:37 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-
-static ll	chosecolor(double x, double y, char **av,double shape)
+static int	chosecolor(double x, double y, char **av, double shape)
 {
 	int		i;
 	double	abs;
@@ -22,9 +21,8 @@ static ll	chosecolor(double x, double y, char **av,double shape)
 	double	temp;
 
 	i = 0;
-  
 	(void)(av);
- 	x0 = ft_atod(av[2]);
+	x0 = ft_atod(av[2]);
 	y0 = ft_atod(av[3]);
 	abs = 0.0;
 	temp = x;
@@ -39,7 +37,7 @@ static ll	chosecolor(double x, double y, char **av,double shape)
 	if (i == MAXITER)
 		return (0xff120919);
 	else
-		return (figureoutiter(i,shape));
+		return (figureoutiter(i, shape));
 }
 
 void	drawjulia(t_screen scr)
@@ -62,7 +60,7 @@ void	drawjulia(t_screen scr)
 		while (j < HEIGHT)
 		{
 			ft_mlx_pixel_put(&scr.img, i, j, chosecolor(scr.value.xmin,
-					scr.value.ymin, scr.av,scr.shapeshifter));
+					scr.value.ymin, scr.av, scr.shapeshifter));
 			scr.value.ymin += skipy;
 			j++;
 		}

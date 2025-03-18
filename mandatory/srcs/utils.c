@@ -6,87 +6,34 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 00:34:22 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 00:56:01 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 05:38:40 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-int	key_listener(int keycode, t_screen *screen)
+void	normnumbers(int *i, int *sign, double *power, double *res)
 {
-	if (keycode == ESC)
-	{
-		closeit(screen);
-		return (0);
-	}
-	if (screen->flag == 1)
-		drawjulia(*screen);
-	if (screen->flag == 2)
-		drawmandelbrotset(*screen);
-	mlx_put_image_to_window(screen->vars.mlx, screen->vars.win, screen->img.img,
-		0, 0);
-	return (0);
-}
-
-void	mouseup(t_screen *scr)
-{
-	scr->value.xmin *= ZIN;
-	scr->value.xmax *= ZIN;
-	scr->value.ymin *= ZIN;
-	scr->value.ymax *= ZIN;
-}
-
-void	mousedown(t_screen *scr)
-{
-	scr->value.xmin *= ZOUT;
-	scr->value.xmax *= ZOUT;
-	scr->value.ymin *= ZOUT;
-	scr->value.ymax *= ZOUT;
-}
-int	mouse_listener(int mousecode,int x,int y, t_screen *screen)
-{
-  (void)x;
-  (void)y;
-	if (mousecode == MUP)
-	{
-		mouseup(screen);
-		if (screen->flag == 1)
-			drawjulia(*screen);
-		if (screen->flag == 2)
-			drawmandelbrotset(*screen);
-		mlx_put_image_to_window(screen->vars.mlx, screen->vars.win,
-			screen->img.img, 0, 0);
-	}
-	else if (mousecode == MDOWN)
-	{
-		mousedown(screen);
-		if (screen->flag == 1)
-			drawjulia(*screen);
-		if (screen->flag == 2)
-			drawmandelbrotset(*screen);
-		mlx_put_image_to_window(screen->vars.mlx, screen->vars.win,
-			screen->img.img, 0, 0);
-	}
-	return (0);
+	*i = 0;
+	*sign = 1;
+	*power = 1;
+	*res = 0;
 }
 
 double	ft_atod(char *str)
 {
 	int		i;
-	int		signe;
+	int		sign;
 	double	power;
 	double	res;
 
-	i = 0;
-	res = 0;
-	power = 1;
-	signe = 1;
+	normnumbers(&i, &sign, &power, &res);
 	while (str[i] == ' ')
 		i++;
 	if ((str[i] == '-' || str[i] == '+'))
 	{
 		if (str[i++] == '-')
-			signe = -1;
+			sign = -1;
 	}
 	while (('0' <= str[i] && str[i] <= '9'))
 		res = res * 10 + (str[i++] - '0');
@@ -98,7 +45,7 @@ double	ft_atod(char *str)
 		res = res + (str[i] - '0') * power;
 		i++;
 	}
-	return (res * signe);
+	return (res * sign);
 }
 
 int	figureoutiter(int temp)
@@ -108,7 +55,7 @@ int	figureoutiter(int temp)
 	int		b;
 	double	t;
 
-	t = (double)((double)temp / MAXITER) * 11;
+	t = (double)(((double)temp / MAXITER) * 11);
 	r = (int)(sin(t * 5 + 3) * 127 + 128);
 	g = (int)(sin(t * 5 + 2) * 127 + 128);
 	b = (int)(sin(t * 5 + 5) * 127 + 128);

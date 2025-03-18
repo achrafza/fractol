@@ -6,14 +6,13 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 19:35:16 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/17 21:28:30 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 05:45:07 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
-#include <math.h>
 
-static ll	chosecolor(double x, double y,double shape)
+static int	chosecolor(double x, double y, double shape)
 {
 	int		i;
 	double	abs;
@@ -37,7 +36,7 @@ static ll	chosecolor(double x, double y,double shape)
 	if (i == MAXITER)
 		return (0xff120919);
 	else
-		return (figureoutiter(i,shape));
+		return (figureoutiter(i, shape));
 }
 
 void	drawburningship(t_screen scr)

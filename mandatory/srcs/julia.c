@@ -6,14 +6,13 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/07 21:14:11 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/18 00:55:56 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 03:00:12 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fractol.h"
 
-
-static ll	chosecolor(double x, double y, char **av)
+static int	chosecolor(double x, double y, char **av)
 {
 	int		i;
 	double	abs;
@@ -22,9 +21,8 @@ static ll	chosecolor(double x, double y, char **av)
 	double	temp;
 
 	i = 0;
-  
 	(void)(av);
- 	x0 = ft_atod(av[2]);
+	x0 = ft_atod(av[2]);
 	y0 = ft_atod(av[3]);
 	abs = 0.0;
 	temp = x;
