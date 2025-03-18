@@ -6,7 +6,7 @@
 /*   By: azahid <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 20:35:45 by azahid            #+#    #+#             */
-/*   Updated: 2025/03/17 21:38:46 by azahid           ###   ########.fr       */
+/*   Updated: 2025/03/18 02:34:55 by azahid           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,23 @@ void	ft_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-int	closeit(t_screen *scr)
+int	closeit(t_screen *f)
 {
-	mlx_destroy_image(scr->vars.mlx, scr->img.img);
-	mlx_clear_window(scr->vars.mlx, scr->vars.win);
-	mlx_destroy_window(scr->vars.mlx, scr->vars.win);
-	exit(0);
+	if (f->img.img)
+	{
+		mlx_destroy_image(f->vars.mlx, f->img.img);
+	}
+	if (f->vars.win)
+	{
+		mlx_clear_window(f->vars.mlx, f->vars.win);
+		mlx_destroy_window(f->vars.mlx, f->vars.win);
+	}
+	if (f->vars.mlx)
+	{
+		mlx_destroy_display(f->vars.mlx);
+		free(f->vars.mlx);
+	}
+	exit(1);
 	return (0);
 }
 
